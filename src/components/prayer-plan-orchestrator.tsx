@@ -1,11 +1,10 @@
 // src/components/prayer-plan-orchestrator.tsx
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState, useEffect, useState } from "react"; // Changed from react-dom to react for useActionState
 import PrayerPlanForm from "./prayer-plan-form";
 import PrayerPlanDisplay from "./prayer-plan-display";
 import { submitPrayerRequestAction, type PrayerPlanState } from "@/app/actions";
-import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
@@ -20,7 +19,7 @@ const initialActionState: PrayerPlanState = {
 };
 
 export default function PrayerPlanOrchestrator() {
-  const [actionState, formAction] = useFormState(submitPrayerRequestAction, initialActionState);
+  const [actionState, formAction] = useActionState(submitPrayerRequestAction, initialActionState); // Changed useFormState to useActionState
   const { toast } = useToast();
   const { t } = useLanguage(); 
   const [showForm, setShowForm] = useState(true);
@@ -89,3 +88,4 @@ export default function PrayerPlanOrchestrator() {
     </div>
   );
 }
+
