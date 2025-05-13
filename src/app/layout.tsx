@@ -12,8 +12,8 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: 'PrayAI - Personalized Prayer Plans',
-  description: 'Let AI help you craft a meaningful prayer journey based on your needs.',
+  title: 'PrayTogether - Personalized Prayer Plans',
+  description: 'Let AI help you craft a meaningful prayer journey based on your needs. Join us to pray together.',
 };
 
 export default function RootLayout({

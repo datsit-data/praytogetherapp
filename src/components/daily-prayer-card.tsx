@@ -1,6 +1,5 @@
 import type { CreatePrayerPlanOutput } from "@/ai/flows/create-prayer-plan";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Quote, Info, Sparkles } from "lucide-react";
+import { Quote, Sparkles } from "lucide-react";
 
 interface DailyPrayerCardProps {
   dailyContent: CreatePrayerPlanOutput["prayerPlan"][0];
@@ -17,6 +16,8 @@ export default function DailyPrayerCard({ dailyContent }: DailyPrayerCardProps) 
         <p className="italic text-foreground pl-8">&quot;{dailyContent.bibleVerse}&quot;</p>
       </div>
 
+      {/* Rationale section removed as per user request */}
+      {/*
       <div className="p-4 rounded-md bg-muted/20 border border-muted">
         <div className="flex items-start gap-3 mb-2">
           <Info className="h-5 w-5 text-primary mt-1 shrink-0" />
@@ -24,6 +25,7 @@ export default function DailyPrayerCard({ dailyContent }: DailyPrayerCardProps) 
         </div>
         <p className="text-foreground pl-8">{dailyContent.rationale}</p>
       </div>
+      */}
 
       <div className="p-4 rounded-md bg-accent/10 border border-accent/50">
         <div className="flex items-start gap-3 mb-2">

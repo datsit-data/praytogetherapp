@@ -7,7 +7,7 @@ export default function AppHeader() {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-primary hover:opacity-80 transition-opacity">
           <Sparkles className="h-7 w-7 text-accent" />
-          <span>PrayAI</span>
+          <span>PrayTogether</span>
         </Link>
         {/* Future navigation items can go here */}
       </div>

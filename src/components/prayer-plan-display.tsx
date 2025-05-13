@@ -3,7 +3,7 @@
 import type { CreatePrayerPlanOutput } from "@/ai/flows/create-prayer-plan";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import DailyPrayerCard from "./daily-prayer-card";
-import { CalendarDays, Info } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PrayerPlanDisplayProps {
@@ -42,14 +42,7 @@ export default function PrayerPlanDisplay({ plan }: PrayerPlanDisplayProps) {
               </p>
             </div>
           </div>
-           {plan.prayerPlan.length > 0 && (
-            <div className="flex items-start gap-3 p-3 bg-muted/30 rounded-md">
-                <Info className="h-5 w-5 text-primary mt-1 shrink-0" />
-                <p className="text-sm text-muted-foreground">
-                    Here is a day-by-day guide for your prayer journey. Each day includes a relevant Bible verse, a reflection on its significance to your prayer, and a short prayer to inspire you.
-                </p>
-            </div>
-           )}
+           {/* Introductory text block removed as per user request */}
         </CardContent>
       </Card>
 
