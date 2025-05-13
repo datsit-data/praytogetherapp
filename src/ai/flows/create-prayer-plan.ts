@@ -24,7 +24,7 @@ export type CreatePrayerPlanInput = z.infer<typeof CreatePrayerPlanInputSchema>;
 const DailyPrayerSchema = z.object({
   day: z.string().describe('Day of the prayer plan (e.g., "Day 1", "Monday", "Lunes", "Día 1") in the specified language.'),
   bibleVerse: z.string().describe('A relevant Bible verse reference (e.g., John 3:16).'),
-  bibleVerseText: z.string().describe('The full text of the Bible verse, accurately quoted and in the specified language.'),
+  bibleVerseText: z.string().describe('The full text of the Bible verse, accurately quoted. If the language is Spanish, use the "Nueva Versión Internacional" (NVI). If English, use a modern, clear translation (e.g., NIV, ESV). Must be in the specified language.'),
   reflection: z
     .string()
     .describe('A detailed reflection (at least 3-4 sentences) in the specified language on how the Bible verse applies to the user\'s prayer reason, guiding them to analyze its meaning in context.'),
@@ -60,7 +60,7 @@ The plan should be for a suggested duration and recommend specific days for pray
 Each day in the plan should include:
 1.  The day identifier (e.g., "Day 1", "Monday", "Lunes", "Día 1") in {{{language}}}.
 2.  A relevant Bible verse reference.
-3.  The full text of that Bible verse, accurately quoted and in {{{language}}}.
+3.  The full text of that Bible verse, accurately quoted in {{{language}}}. If {{{language}}} is Spanish (e.g., 'es', 'Spanish'), provide the text from the "Nueva Versión Internacional" (NVI). If {{{language}}} is English, use a modern and clear translation like the New International Version (NIV) or English Standard Version (ESV).
 4.  A detailed reflection (at least 3-4 sentences) in {{{language}}} on how the Bible verse applies to the user's prayer reason ({{{prayerReason}}}), guiding them to analyze its meaning in context.
 5.  A longer, more comprehensive, and personalized prayer (at least 4-5 sentences) in {{{language}}} for the day, inspired by the verse, reflection, and prayer reason.
 
@@ -77,7 +77,7 @@ Format the prayer plan as a JSON object with the following structure, ensuring a
     {
       "day": "Localized Day (e.g., Day 1 / Lunes)",
       "bibleVerse": "Bible Verse Reference (e.g., John 3:16)",
-      "bibleVerseText": "Full text of the Bible verse in {{{language}}}",
+      "bibleVerseText": "Full text of the Bible verse in {{{language}}}. For Spanish, this must be from the NVI. For English, use a modern translation (e.g., NIV, ESV).",
       "reflection": "Detailed reflection in {{{language}}}",
       "prayer": "Longer, personalized prayer in {{{language}}}"
     }
@@ -98,3 +98,4 @@ const createPrayerPlanFlow = ai.defineFlow(
     return output!;
   }
 );
+
