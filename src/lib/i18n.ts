@@ -44,7 +44,8 @@ export const translations = {
     planGenerationFailedTitle: "Plan Generation Failed",
     planGenerationFailedDescription: "{error} Please try modifying your prayer reason or try again later.",
     notice: "Notice",
-    selectAppLanguage: "Select App Language:"
+    selectAppLanguage: "Select App Language:",
+    createAnotherPlan: "Create Another Plan",
   },
   es: {
     appName: "OremosJuntos",
@@ -88,10 +89,12 @@ export const translations = {
     planGenerationFailedTitle: "Falló la Generación del Plan",
     planGenerationFailedDescription: "{error} Por favor, intenta modificar el motivo de tu oración o inténtalo de nuevo más tarde.",
     notice: "Aviso",
-    selectAppLanguage: "Seleccionar Idioma de la Aplicación:"
+    selectAppLanguage: "Seleccionar Idioma de la Aplicación:",
+    createAnotherPlan: "Crear Otro Plan",
   },
 };
 
 export function getTranslations(locale: Locale) {
   return translations[locale] || translations.en;
 }
+
