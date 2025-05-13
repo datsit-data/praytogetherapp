@@ -1,5 +1,7 @@
-import { Sparkles } from 'lucide-react';
+// src/components/layout/app-header.tsx
+import { Sparkles, ListChecks } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function AppHeader() {
   return (
@@ -9,7 +11,14 @@ export default function AppHeader() {
           <Sparkles className="h-7 w-7 text-accent" />
           <span>PrayTogether</span>
         </Link>
-        {/* Future navigation items can go here */}
+        <nav>
+          <Button variant="ghost" asChild>
+            <Link href="/saved-plans" className="flex items-center gap-2">
+              <ListChecks className="h-5 w-5" />
+              Saved Plans
+            </Link>
+          </Button>
+        </nav>
       </div>
     </header>
   );
