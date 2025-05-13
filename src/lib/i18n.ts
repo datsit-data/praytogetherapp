@@ -98,7 +98,7 @@ export const translations = {
     reflectionTitle: "Reflexión",
     guidedPrayerTitle: "Oración Guiada",
     tipOfTheDayTitle: "Consejo del Día",
-    actionableStepsTitle: "Pasos a Seguir",
+    actionableStepsTitle: "Cosas que puedes hacer en el día a día",
   },
 };
 
