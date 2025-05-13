@@ -15,7 +15,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en'); // Default to English
+  const [locale, setLocaleState] = useState<Locale>('es'); // Default to Spanish
 
   useEffect(() => {
     const storedLocale = localStorage.getItem('appLanguage') as Locale | null;
@@ -59,3 +59,4 @@ export function useLanguage() {
   }
   return context;
 }
+
