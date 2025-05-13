@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import DailyPrayerCard from "./daily-prayer-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { CalendarDays, Save } from "lucide-react";
+import { Save } from "lucide-react"; // Removed CalendarDays as it's no longer used
 import { usePrayerPlansStore } from "@/hooks/use-prayer-plans-store";
 import { useToast } from "@/hooks/use-toast";
 import { format } from 'date-fns';
@@ -29,8 +29,8 @@ export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPla
         prayerReasonContext: plan.prayerReasonContext,
         languageContext: plan.languageContext,
         prayerPlan: plan.prayerPlan,
-        recommendedDays: plan.recommendedDays,
-        planDurationSuggestion: plan.planDurationSuggestion,
+        recommendedDays: plan.recommendedDays, // Still pass it to save, even if not displayed prominently
+        planDurationSuggestion: plan.planDurationSuggestion, // Still pass it to save
     };
     
     const savedPlan = storeSavePlan(planToSave);
@@ -79,15 +79,7 @@ export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPla
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-md">
-            <CalendarDays className="h-6 w-6 text-primary" />
-            <div>
-              <h3 className="font-semibold">{t('recommendedDaysAndDuration')}</h3>
-              <p className="text-sm text-muted-foreground">
-                {plan.recommendedDays} for {plan.planDurationSuggestion}.
-              </p>
-            </div>
-          </div>
+          {/* Removed the recommended days and duration block */}
           {!isSavedPlanView && (
             <div className="flex justify-end mt-4">
               <Button onClick={handleSavePlan}>
@@ -114,3 +106,4 @@ export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPla
     </div>
   );
 }
+
