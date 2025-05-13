@@ -5,8 +5,7 @@ import { useFormStatus } from "react-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Send, Loader2, Languages, Info } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import type { PrayerPlanState } from "@/app/actions";
 import { useLanguage } from "@/contexts/language-context"; 
 
@@ -54,25 +53,6 @@ export default function PrayerPlanForm({ formAction, initialState }: PrayerPlanF
           defaultValue={initialState?.input?.prayerReason ?? ""}
         />
       </div>
-
-      <div>
-        <Label htmlFor="language" className="block text-lg font-medium mb-2 flex items-center">
-          <Languages className="mr-2 h-5 w-5 text-primary" />
-          {t('languageForPlanLabel')}
-        </Label>
-        <Select name="language" defaultValue={initialState?.input?.language ?? "English"}>
-          <SelectTrigger className="w-full" id="language">
-            <SelectValue placeholder={t('selectLanguage')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="English">{t('english')}</SelectItem>
-            <SelectItem value="Spanish">{t('spanish')}</SelectItem>
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-          <Info size={12} /> {t('prayerPlanContentLanguageInfo')}
-        </p>
-      </div>
       
       {initialState?.error && !initialState.data && (
          <p className="text-sm text-destructive mt-2">{initialState.error}</p> 
@@ -84,4 +64,3 @@ export default function PrayerPlanForm({ formAction, initialState }: PrayerPlanF
     </form>
   );
 }
-

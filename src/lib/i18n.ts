@@ -8,7 +8,6 @@ export const translations = {
     welcome: "Welcome to PrayTogether",
     prayerReasonLabel: "What would you like to pray for?",
     prayerReasonPlaceholder: "E.g., for strength during a challenging time, for guidance in a decision, for gratitude for blessings received...",
-    languageForPlanLabel: "Choose a language for your prayer plan:",
     createPlanButton: "Create My Prayer Plan",
     generatingPlanButton: "Generating Plan...",
     savedPlansNav: "Saved Plans",
@@ -45,8 +44,7 @@ export const translations = {
     planGenerationFailedTitle: "Plan Generation Failed",
     planGenerationFailedDescription: "{error} Please try modifying your prayer reason or try again later.",
     notice: "Notice",
-    selectAppLanguage: "Select App Language:",
-    prayerPlanContentLanguageInfo: "This sets the language for the prayer content itself."
+    selectAppLanguage: "Select App Language:"
   },
   es: {
     appName: "OremosJuntos",
@@ -54,7 +52,6 @@ export const translations = {
     welcome: "Bienvenido a OremosJuntos",
     prayerReasonLabel: "¿Por qué te gustaría orar?",
     prayerReasonPlaceholder: "Ej., por fortaleza en un momento difícil, por guía en una decisión, por gratitud por las bendiciones recibidas...",
-    languageForPlanLabel: "Elige un idioma para tu plan de oración:",
     createPlanButton: "Crear Mi Plan de Oración",
     generatingPlanButton: "Generando Plan...",
     savedPlansNav: "Planes Guardados",
@@ -91,8 +88,7 @@ export const translations = {
     planGenerationFailedTitle: "Falló la Generación del Plan",
     planGenerationFailedDescription: "{error} Por favor, intenta modificar el motivo de tu oración o inténtalo de nuevo más tarde.",
     notice: "Aviso",
-    selectAppLanguage: "Seleccionar Idioma de la Aplicación:",
-    prayerPlanContentLanguageInfo: "Esto establece el idioma para el contenido de la oración en sí."
+    selectAppLanguage: "Seleccionar Idioma de la Aplicación:"
   },
 };
 

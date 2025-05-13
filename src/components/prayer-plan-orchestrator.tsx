@@ -1,7 +1,7 @@
 // src/components/prayer-plan-orchestrator.tsx
 "use client";
 
-import { useActionState, useEffect, useState } from "react"; // Changed from react-dom to react for useActionState
+import { useActionState, useEffect, useState } from "react"; 
 import PrayerPlanForm from "./prayer-plan-form";
 import PrayerPlanDisplay from "./prayer-plan-display";
 import { submitPrayerRequestAction, type PrayerPlanState } from "@/app/actions";
@@ -19,10 +19,15 @@ const initialActionState: PrayerPlanState = {
 };
 
 export default function PrayerPlanOrchestrator() {
-  const [actionState, formAction] = useActionState(submitPrayerRequestAction, initialActionState); // Changed useFormState to useActionState
+  const { locale, t } = useLanguage(); 
+  
+  // Bind the current locale to the server action
+  const boundFormAction = submitPrayerRequestAction.bind(null, locale);
+  
+  const [actionState, formAction] = useActionState(boundFormAction, initialActionState);
   const { toast } = useToast();
-  const { t } = useLanguage(); 
-  const [showForm, setShowForm] = useState(true);
+  
+  const [showForm, setShowForm] = useState(true); // Kept for potential future use, though not strictly necessary now
   const [currentPlan, setCurrentPlan] = useState<SavedPrayerPlan | null>(null);
 
 
@@ -33,6 +38,8 @@ export default function PrayerPlanOrchestrator() {
         description: actionState.message, 
         variant: "default",
       });
+       // If a plan is successfully generated, we expect to show the display, not the form.
+      setShowForm(false); 
     }
     if (actionState?.error && !actionState.data) { 
       toast({
@@ -40,11 +47,14 @@ export default function PrayerPlanOrchestrator() {
         description: actionState.error, 
         variant: "destructive",
       });
+      setShowForm(true); // If error, keep showing form or allow re-try
     }
   }, [actionState, toast, t]);
 
   const handlePlanSaved = (savedPlan: SavedPrayerPlan) => {
     console.log("Plan saved in orchestrator:", savedPlan.id);
+    // Potentially set currentPlan here if we want to keep showing it after saving
+    // For now, if a plan is saved from the display, the display itself handles its state.
   };
 
 
@@ -59,14 +69,15 @@ export default function PrayerPlanOrchestrator() {
     );
   }
   
-  if (currentPlan) {
+  // This logic might need adjustment based on UX flow, e.g., if we want to show a saved plan directly
+  if (currentPlan) { 
      return <PrayerPlanDisplay plan={currentPlan} isSavedPlanView={true} />;
   }
 
-
+  // Default to showing the form if no data/plan is active
   return (
     <div>
-      {showForm && <PrayerPlanForm formAction={formAction} initialState={actionState} />}
+      <PrayerPlanForm formAction={formAction} initialState={actionState} />
       {actionState?.error && !actionState.data && (
          <Alert variant="destructive" className="mt-6">
            <Terminal className="h-4 w-4" />
@@ -88,4 +99,3 @@ export default function PrayerPlanOrchestrator() {
     </div>
   );
 }
-
