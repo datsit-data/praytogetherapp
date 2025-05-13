@@ -46,6 +46,10 @@ export const translations = {
     notice: "Notice",
     selectAppLanguage: "Select App Language:",
     createAnotherPlan: "Create Another Plan",
+    reflectionTitle: "Reflection",
+    guidedPrayerTitle: "Guided Prayer",
+    tipOfTheDayTitle: "Tip of the Day",
+    actionableStepsTitle: "Actionable Steps",
   },
   es: {
     appName: "OremosJuntos",
@@ -91,6 +95,10 @@ export const translations = {
     notice: "Aviso",
     selectAppLanguage: "Seleccionar Idioma de la Aplicación:",
     createAnotherPlan: "Crear Otro Plan",
+    reflectionTitle: "Reflexión",
+    guidedPrayerTitle: "Oración Guiada",
+    tipOfTheDayTitle: "Consejo del Día",
+    actionableStepsTitle: "Pasos a Seguir",
   },
 };
 

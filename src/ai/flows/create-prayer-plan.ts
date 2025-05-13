@@ -29,6 +29,8 @@ const DailyPrayerSchema = z.object({
     .string()
     .describe('A detailed reflection (at least 3-4 sentences) in the specified language on how the Bible verse applies to the user\'s prayer reason, guiding them to analyze its meaning in context.'),
   prayer: z.string().describe('A longer, more comprehensive, and personalized prayer (at least 4-5 sentences) in the specified language for the day, inspired by the verse, reflection, and prayer reason.'),
+  tipOfTheDay: z.string().describe('A practical and encouraging tip (1-2 sentences) in the specified language for the day, related to the prayer reason and scripture, helping the user to apply the day\'s theme in their life.'),
+  actionableSteps: z.string().describe('A list of 2-3 concrete, actionable steps or practices in the specified language. Each step should start with a hyphen and a space (e.g., "- Step 1\\n- Step 2"). These steps should complement prayer and reflection, directly related to the prayer reason and the day\'s teachings.'),
 });
 
 const CreatePrayerPlanOutputSchema = z.object({
@@ -63,6 +65,8 @@ Each day in the plan should include:
 3.  The full text of that Bible verse, accurately quoted in {{{language}}}. If {{{language}}} is Spanish (e.g., 'es', 'Spanish'), provide the text from the "Nueva Versión Internacional" (NVI). If {{{language}}} is English, use a modern and clear translation like the New International Version (NIV) or English Standard Version (ESV).
 4.  A detailed reflection (at least 3-4 sentences) in {{{language}}} on how the Bible verse applies to the user's prayer reason ({{{prayerReason}}}), guiding them to analyze its meaning in context.
 5.  A longer, more comprehensive, and personalized prayer (at least 4-5 sentences) in {{{language}}} for the day, inspired by the verse, reflection, and prayer reason.
+6.  A practical and encouraging tip (1-2 sentences) in {{{language}}} for the day, related to the prayer reason and scripture, under the key \`tipOfTheDay\`. This tip should help the user apply the day's theme in their life.
+7.  A list of 2-3 concrete, actionable steps or practices in {{{language}}} that the user can undertake, under the key \`actionableSteps\`. Format this as a string, where each step starts with a hyphen and a space (e.g., "- Step 1\\n- Step 2"). These steps should complement their prayer and reflection, directly related to their prayer reason and the day's teachings.
 
 Reason for prayer: {{{prayerReason}}}
 Desired language: {{{language}}}
@@ -79,7 +83,9 @@ Format the prayer plan as a JSON object with the following structure, ensuring a
       "bibleVerse": "Bible Verse Reference (e.g., John 3:16)",
       "bibleVerseText": "Full text of the Bible verse in {{{language}}}. For Spanish, this must be from the NVI. For English, use a modern translation (e.g., NIV, ESV).",
       "reflection": "Detailed reflection in {{{language}}}",
-      "prayer": "Longer, personalized prayer in {{{language}}}"
+      "prayer": "Longer, personalized prayer in {{{language}}}",
+      "tipOfTheDay": "Localized practical tip for the day (1-2 sentences) in {{{language}}}",
+      "actionableSteps": "- Localized actionable step 1 in {{{language}}}\\n- Localized actionable step 2 in {{{language}}}\\n- Localized actionable step 3 in {{{language}}}"
     }
   ],
   "recommendedDays": "Localized recommended days (e.g., Daily / Diario)",
