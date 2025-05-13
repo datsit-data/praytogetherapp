@@ -6,8 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Send, Loader2, Languages } from "lucide-react";
+import { Send, Loader2, Languages, Info } from "lucide-react";
 import type { PrayerPlanState } from "@/app/actions";
+import { useLanguage } from "@/contexts/language-context"; 
 
 interface PrayerPlanFormProps {
   formAction: (payload: FormData) => void;
@@ -16,17 +17,18 @@ interface PrayerPlanFormProps {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const { t } = useLanguage();
   return (
     <Button type="submit" disabled={pending} className="w-full sm:w-auto">
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Generating Plan...
+          {t('generatingPlanButton')}
         </>
       ) : (
         <>
           <Send className="mr-2 h-4 w-4" />
-          Create My Prayer Plan
+          {t('createPlanButton')}
         </>
       )}
     </Button>
@@ -34,16 +36,18 @@ function SubmitButton() {
 }
 
 export default function PrayerPlanForm({ formAction, initialState }: PrayerPlanFormProps) {
+  const { t } = useLanguage(); 
+
   return (
     <form action={formAction} className="space-y-6 p-6 bg-card rounded-lg shadow-md">
       <div>
         <Label htmlFor="prayerReason" className="block text-lg font-medium mb-2">
-          What would you like to pray for?
+          {t('prayerReasonLabel')}
         </Label>
         <Textarea
           id="prayerReason"
           name="prayerReason"
-          placeholder="E.g., for strength during a challenging time, for guidance in a decision, for gratitude for blessings received..."
+          placeholder={t('prayerReasonPlaceholder')}
           rows={5}
           required
           className="text-base"
@@ -54,21 +58,24 @@ export default function PrayerPlanForm({ formAction, initialState }: PrayerPlanF
       <div>
         <Label htmlFor="language" className="block text-lg font-medium mb-2 flex items-center">
           <Languages className="mr-2 h-5 w-5 text-primary" />
-          Choose a language for your prayer plan:
+          {t('languageForPlanLabel')}
         </Label>
         <Select name="language" defaultValue={initialState?.input?.language ?? "English"}>
           <SelectTrigger className="w-full" id="language">
-            <SelectValue placeholder="Select language" />
+            <SelectValue placeholder={t('selectLanguage')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="English">English</SelectItem>
-            <SelectItem value="Spanish">Español (Spanish)</SelectItem>
+            <SelectItem value="English">{t('english')}</SelectItem>
+            <SelectItem value="Spanish">{t('spanish')}</SelectItem>
           </SelectContent>
         </Select>
+        <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+          <Info size={12} /> {t('prayerPlanContentLanguageInfo')}
+        </p>
       </div>
       
       {initialState?.error && !initialState.data && (
-         <p className="text-sm text-destructive mt-2">{initialState.error}</p>
+         <p className="text-sm text-destructive mt-2">{initialState.error}</p> 
       )}
 
       <div className="flex justify-end">

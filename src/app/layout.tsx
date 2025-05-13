@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import AppHeader from '@/components/layout/app-header';
 import AppFooter from '@/components/layout/app-footer';
+import { LanguageProvider } from '@/contexts/language-context';
 
 const lato = Lato({
   subsets: ['latin'],
@@ -24,12 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${lato.variable} font-sans antialiased flex flex-col min-h-screen`}>
-        <AppHeader />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          {children}
-        </main>
-        <AppFooter />
-        <Toaster />
+        <LanguageProvider>
+          <AppHeader />
+          <main className="flex-grow container mx-auto px-4 py-8">
+            {children}
+          </main>
+          <AppFooter />
+          <Toaster />
+        </LanguageProvider>
       </body>
     </html>
   );

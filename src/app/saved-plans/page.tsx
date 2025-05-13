@@ -21,10 +21,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useLanguage } from "@/contexts/language-context"; 
 
 export default function SavedPlansPage() {
   const { savedPlans, deletePlan, isInitialized } = usePrayerPlansStore();
   const [mounted, setMounted] = useState(false);
+  const { t } = useLanguage(); 
 
   useEffect(() => {
     setMounted(true);
@@ -33,7 +35,7 @@ export default function SavedPlansPage() {
   if (!mounted || !isInitialized) {
     return (
       <div className="text-center py-10">
-        <p className="text-lg text-muted-foreground">Loading saved plans...</p>
+        <p className="text-lg text-muted-foreground">{t('loadingSavedPlans')}</p>
       </div>
     );
   }
@@ -43,24 +45,23 @@ export default function SavedPlansPage() {
       <Card className="mt-8 shadow-lg w-full max-w-md mx-auto">
         <CardHeader className="items-center">
           <Info className="h-12 w-12 text-primary mb-4" />
-          <CardTitle className="text-2xl">No Saved Plans Yet</CardTitle>
+          <CardTitle className="text-2xl">{t('noSavedPlansTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center text-muted-foreground">
-            You haven&apos;t saved any prayer plans. Create a new plan from the homepage and save it to see it here.
+            {t('noSavedPlansDescription')}
           </p>
         </CardContent>
       </Card>
     );
   }
 
-  // Sort plans by savedAt date, newest first
   const sortedPlans = [...savedPlans].sort((a, b) => parseISO(b.savedAt).getTime() - parseISO(a.savedAt).getTime());
 
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold text-primary text-center">Your Saved Prayer Plans</h1>
+      <h1 className="text-3xl font-bold text-primary text-center">{t('yourSavedPlans')}</h1>
       
       <Accordion type="multiple" className="w-full space-y-4">
         {sortedPlans.map((plan) => (
@@ -69,10 +70,10 @@ export default function SavedPlansPage() {
               <AccordionTrigger className="flex-1 text-left hover:no-underline">
                 <div className="flex flex-col">
                    <span className="font-semibold text-primary text-lg">
-                    Plan for: &quot;{plan.prayerReasonContext.length > 50 ? `${plan.prayerReasonContext.substring(0, 50)}...` : plan.prayerReasonContext}&quot;
+                    {t('planFor')} &quot;{plan.prayerReasonContext.length > 50 ? `${plan.prayerReasonContext.substring(0, 50)}...` : plan.prayerReasonContext}&quot;
                   </span>
                   <span className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                    <CalendarClock size={14} /> Saved: {format(parseISO(plan.savedAt), "MMM d, yyyy h:mm a")} ({plan.languageContext})
+                    <CalendarClock size={14} /> {t('saved')} {format(parseISO(plan.savedAt), "MMM d, yyyy h:mm a")} ({plan.languageContext})
                   </span>
                 </div>
               </AccordionTrigger>
@@ -81,27 +82,26 @@ export default function SavedPlansPage() {
                 <AlertDialogTrigger asChild>
                   <Button variant="ghost" size="icon" className="ml-4 text-destructive hover:bg-destructive/10">
                     <Trash2 className="h-5 w-5" />
-                    <span className="sr-only">Delete plan</span>
+                    <span className="sr-only">{t('deletePlan')}</span>
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogTitle>{t('deletePlanConfirmTitle')}</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete this prayer plan.
+                      {t('deletePlanConfirmDescription')}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
                     <AlertDialogAction onClick={() => deletePlan(plan.id)} className="bg-destructive hover:bg-destructive/90">
-                      Delete
+                      {t('delete')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
             </div>
             <AccordionContent className="px-6 pb-6 border-t border-border">
-              {/* Pass isSavedPlanView to hide the "Save Plan" button again */}
               <PrayerPlanDisplay plan={plan} isSavedPlanView={true} />
             </AccordionContent>
           </AccordionItem>

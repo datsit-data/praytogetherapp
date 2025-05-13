@@ -11,20 +11,20 @@ import { usePrayerPlansStore } from "@/hooks/use-prayer-plans-store";
 import { useToast } from "@/hooks/use-toast";
 import { format } from 'date-fns';
 import type { SavedPrayerPlan } from "@/types/prayer-plan";
+import { useLanguage } from "@/contexts/language-context"; 
 
 interface PrayerPlanDisplayProps {
-  plan: CreatePrayerPlanOutput | SavedPrayerPlan; // Can be a newly generated or saved plan
-  isSavedPlanView?: boolean; // To conditionally show save button or other elements
-  onPlanSaved?: (savedPlan: SavedPrayerPlan) => void; // Optional callback after saving
+  plan: CreatePrayerPlanOutput | SavedPrayerPlan; 
+  isSavedPlanView?: boolean; 
+  onPlanSaved?: (savedPlan: SavedPrayerPlan) => void; 
 }
 
 export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPlanSaved }: PrayerPlanDisplayProps) {
   const { savePlan: storeSavePlan } = usePrayerPlansStore();
   const { toast } = useToast();
+  const { t } = useLanguage(); 
 
   const handleSavePlan = () => {
-    // Ensure we have the full CreatePrayerPlanOutput structure, even if it's already a SavedPrayerPlan
-    // This is mainly to satisfy the storeSavePlan signature if it expects CreatePrayerPlanOutput
     const planToSave: CreatePrayerPlanOutput = {
         prayerReasonContext: plan.prayerReasonContext,
         languageContext: plan.languageContext,
@@ -36,16 +36,16 @@ export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPla
     const savedPlan = storeSavePlan(planToSave);
     if (savedPlan) {
         toast({
-            title: "Plan Saved!",
-            description: `Your prayer plan for "${plan.prayerReasonContext}" has been saved.`,
+            title: t('planSavedTitle'),
+            description: t('planSavedDescription', { reason: plan.prayerReasonContext }),
         });
         if (onPlanSaved) {
             onPlanSaved(savedPlan);
         }
     } else {
          toast({
-            title: "Error Saving Plan",
-            description: "Could not save the plan. LocalStorage might be unavailable or full.",
+            title: t('errorSavingPlanTitle'),
+            description: t('errorSavingPlanDescription'),
             variant: "destructive",
         });
     }
@@ -55,11 +55,11 @@ export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPla
     return (
       <Card className="mt-8 shadow-lg">
         <CardHeader>
-          <CardTitle className="text-center text-destructive">No Plan Generated</CardTitle>
+          <CardTitle className="text-center text-destructive">{t('noPlanGeneratedTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center text-muted-foreground">
-            We couldn&apos;t generate a prayer plan based on your input. Please try rephrasing your reason or try again later.
+            {t('noPlanGeneratedDescription')}
           </p>
         </CardContent>
       </Card>
@@ -70,11 +70,11 @@ export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPla
     <div className="mt-12 space-y-8">
       <Card className="shadow-lg border-primary/50">
         <CardHeader>
-          <CardTitle className="text-2xl text-center text-primary">Your Personalized Prayer Plan</CardTitle>
+          <CardTitle className="text-2xl text-center text-primary">{t('yourPersonalizedPlan')}</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            For: &quot;{plan.prayerReasonContext}&quot; (Language: {plan.languageContext})
+            {t('for')} &quot;{plan.prayerReasonContext}&quot; ({t('language')}: {plan.languageContext})
             { (plan as SavedPrayerPlan).savedAt && (
-              <span className="block text-xs mt-1">Saved on: {format(new Date((plan as SavedPrayerPlan).savedAt), "PPP p")}</span>
+              <span className="block text-xs mt-1">{t('savedOn')}: {format(new Date((plan as SavedPrayerPlan).savedAt), "PPP p")}</span>
             )}
           </CardDescription>
         </CardHeader>
@@ -82,7 +82,7 @@ export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPla
           <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-md">
             <CalendarDays className="h-6 w-6 text-primary" />
             <div>
-              <h3 className="font-semibold">Recommended Days & Duration</h3>
+              <h3 className="font-semibold">{t('recommendedDaysAndDuration')}</h3>
               <p className="text-sm text-muted-foreground">
                 {plan.recommendedDays} for {plan.planDurationSuggestion}.
               </p>
@@ -92,7 +92,7 @@ export default function PrayerPlanDisplay({ plan, isSavedPlanView = false, onPla
             <div className="flex justify-end mt-4">
               <Button onClick={handleSavePlan}>
                 <Save className="mr-2 h-4 w-4" />
-                Save This Plan
+                {t('saveThisPlan')}
               </Button>
             </div>
           )}
