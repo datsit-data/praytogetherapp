@@ -1,0 +1,105 @@
+
+// src/app/login/page.tsx
+"use client";
+
+import { useState, type FormEvent, useEffect } from 'react';
+import { useAuth } from '@/contexts/auth-context';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, LogInIcon } from 'lucide-react';
+import { useLanguage } from '@/contexts/language-context';
+
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { logIn, currentUser, loading: authLoading, error, setError } = useAuth();
+  const router = useRouter();
+  const { t } = useLanguage();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push('/');
+    }
+  }, [currentUser, router]);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null); // Clear previous errors
+    const user = await logIn(email, password);
+    if (user) {
+      router.push('/');
+    }
+    setIsSubmitting(false);
+  };
+
+  if (authLoading || currentUser) {
+    return (
+      <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex justify-center items-center py-12">
+      <Card className="w-full max-w-md shadow-xl">
+        <CardHeader className="text-center">
+          <LogInIcon className="mx-auto h-12 w-12 text-primary mb-2" />
+          <CardTitle className="text-3xl font-bold">{t('loginTitle')}</CardTitle>
+          <CardDescription>{t('loginPrompt')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email">{t('emailLabel')}</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+                className="text-base"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">{t('passwordLabel')}</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="text-base"
+              />
+            </div>
+            {error && <p className="text-sm text-destructive text-center">{error}</p>}
+            <Button type="submit" className="w-full" disabled={isSubmitting || authLoading}>
+              {isSubmitting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <LogInIcon className="mr-2 h-4 w-4" />
+              )}
+              {isSubmitting ? t('loggingInButton') : t('loginButton')}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col items-center space-y-2">
+          <p className="text-sm text-muted-foreground">
+            {t('dontHaveAccountPrompt')}{' '}
+            <Button variant="link" asChild className="p-0 h-auto">
+              <Link href="/signup">{t('signupLink')}</Link>
+            </Button>
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+}

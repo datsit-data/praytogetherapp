@@ -1,3 +1,4 @@
+
 // src/lib/i18n.ts
 export type Locale = 'en' | 'es';
 
@@ -50,6 +51,35 @@ export const translations = {
     guidedPrayerTitle: "Guided Prayer",
     tipOfTheDayTitle: "Tip of the Day",
     actionableStepsTitle: "Actionable Steps",
+    // Auth translations
+    loginTitle: "Log In",
+    loginButton: "Log In",
+    loggingInButton: "Logging In...",
+    loginPrompt: "Log in to your PrayTogether account.",
+    emailLabel: "Email",
+    passwordLabel: "Password",
+    passwordPlaceholder: "At least 6 characters",
+    confirmPasswordLabel: "Confirm Password",
+    confirmPasswordPlaceholder: "Re-enter your password",
+    dontHaveAccountPrompt: "Don't have an account?",
+    signupLink: "Sign up",
+    signupTitle: "Create Account",
+    signupButton: "Sign Up",
+    creatingAccountButton: "Creating Account...",
+    signupPrompt: "Create a new PrayTogether account.",
+    alreadyHaveAccountPrompt: "Already have an account?",
+    loginLink: "Log in",
+    logoutButton: "Log Out",
+    myAccount: "My Account",
+    profile: "Profile", // If you add a profile page
+    signupFailedError: "Signup failed. Please try again.",
+    loginFailedError: "Login failed. Please check your credentials.",
+    logoutFailedError: "Logout failed. Please try again.",
+    passwordsDontMatchError: "Passwords do not match.",
+    checkingAuthStatus: "Checking authentication status...",
+    accessDeniedTitle: "Access Denied",
+    mustBeLoggedInToViewPlans: "You must be logged in to view your saved plans.",
+    createFirstPlanButton: "Create Your First Plan",
   },
   es: {
     appName: "OremosJuntos",
@@ -99,10 +129,38 @@ export const translations = {
     guidedPrayerTitle: "Oración Guiada",
     tipOfTheDayTitle: "Consejo del Día",
     actionableStepsTitle: "Cosas que puedes hacer en el día a día",
+    // Auth translations
+    loginTitle: "Iniciar Sesión",
+    loginButton: "Iniciar Sesión",
+    loggingInButton: "Iniciando Sesión...",
+    loginPrompt: "Inicia sesión en tu cuenta de OremosJuntos.",
+    emailLabel: "Correo Electrónico",
+    passwordLabel: "Contraseña",
+    passwordPlaceholder: "Mínimo 6 caracteres",
+    confirmPasswordLabel: "Confirmar Contraseña",
+    confirmPasswordPlaceholder: "Vuelve a escribir tu contraseña",
+    dontHaveAccountPrompt: "¿No tienes una cuenta?",
+    signupLink: "Regístrate",
+    signupTitle: "Crear Cuenta",
+    signupButton: "Registrarse",
+    creatingAccountButton: "Creando Cuenta...",
+    signupPrompt: "Crea una nueva cuenta en OremosJuntos.",
+    alreadyHaveAccountPrompt: "¿Ya tienes una cuenta?",
+    loginLink: "Inicia sesión",
+    logoutButton: "Cerrar Sesión",
+    myAccount: "Mi Cuenta",
+    profile: "Perfil", // Si añades una página de perfil
+    signupFailedError: "Error al registrarse. Por favor, inténtalo de nuevo.",
+    loginFailedError: "Error al iniciar sesión. Verifica tus credenciales.",
+    logoutFailedError: "Error al cerrar sesión. Por favor, inténtalo de nuevo.",
+    passwordsDontMatchError: "Las contraseñas no coinciden.",
+    checkingAuthStatus: "Verificando estado de autenticación...",
+    accessDeniedTitle: "Acceso Denegado",
+    mustBeLoggedInToViewPlans: "Debes iniciar sesión para ver tus planes guardados.",
+    createFirstPlanButton: "Crea Tu Primer Plan",
   },
 };
 
 export function getTranslations(locale: Locale) {
   return translations[locale] || translations.en;
 }
-

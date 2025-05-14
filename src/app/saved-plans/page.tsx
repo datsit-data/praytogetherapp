@@ -1,3 +1,4 @@
+
 // src/app/saved-plans/page.tsx
 "use client";
 
@@ -8,7 +9,7 @@ import PrayerPlanDisplay from "@/components/prayer-plan-display";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Trash2, Info, CalendarClock } from "lucide-react";
+import { Trash2, Info, CalendarClock, Loader2, ShieldAlert } from "lucide-react";
 import { format, parseISO } from 'date-fns';
 import {
   AlertDialog,
@@ -22,23 +23,58 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useLanguage } from "@/contexts/language-context"; 
+import { useAuth } from "@/contexts/auth-context";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SavedPlansPage() {
-  const { savedPlans, deletePlan, isInitialized } = usePrayerPlansStore();
+  const { savedPlans, deletePlan, isInitialized: storeIsInitialized } = usePrayerPlansStore();
   const [mounted, setMounted] = useState(false);
   const { t } = useLanguage(); 
+  const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || !isInitialized) {
+  useEffect(() => {
+    if (mounted && !authLoading && !currentUser) {
+      router.push('/login?redirect=/saved-plans');
+    }
+  }, [mounted, authLoading, currentUser, router]);
+
+
+  if (authLoading || !mounted || !storeIsInitialized || !currentUser) {
     return (
-      <div className="text-center py-10">
-        <p className="text-lg text-muted-foreground">{t('loadingSavedPlans')}</p>
+      <div className="text-center py-20 flex flex-col items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+        <p className="text-lg text-muted-foreground">{authLoading ? t('checkingAuthStatus') : t('loadingSavedPlans')}</p>
       </div>
     );
   }
+  
+  if (!currentUser) {
+     return (
+      <Card className="mt-8 shadow-lg w-full max-w-md mx-auto">
+        <CardHeader className="items-center">
+          <ShieldAlert className="h-12 w-12 text-destructive mb-4" />
+          <CardTitle className="text-2xl">{t('accessDeniedTitle')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-center text-muted-foreground">
+            {t('mustBeLoggedInToViewPlans')}
+          </p>
+        </CardContent>
+        <CardFooter>
+          <Button asChild className="w-full">
+            <Link href="/login?redirect=/saved-plans">{t('loginButton')}</Link>
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+
 
   if (savedPlans.length === 0) {
     return (
@@ -52,6 +88,11 @@ export default function SavedPlansPage() {
             {t('noSavedPlansDescription')}
           </p>
         </CardContent>
+         <CardFooter>
+            <Button asChild className="w-full">
+                <Link href="/">{t('createFirstPlanButton')}</Link>
+            </Button>
+        </CardFooter>
       </Card>
     );
   }
