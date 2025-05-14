@@ -2,7 +2,7 @@
 // src/components/layout/app-header.tsx
 "use client"; 
 
-import { Sparkles, ListChecks, LanguagesIcon, LogIn, UserPlus, LogOut, UserCircle } from 'lucide-react';
+import { Sparkles, ListChecks, LanguagesIcon, LogIn, UserPlus, LogOut, UserCog, Loader2 } from 'lucide-react'; // Added Loader2
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/language-context'; 
@@ -28,15 +28,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function AppHeader() {
   const { locale, setLocale, t } = useLanguage(); 
-  const { currentUser, logOut, loading } = useAuth();
+  const { currentUser, userProfile, logOut, loading: authLoading } = useAuth(); // Added userProfile
 
   const handleLanguageChange = (value: string) => {
     setLocale(value as Locale);
   };
 
-  const getInitials = (email?: string | null) => {
-    if (!email) return "U";
-    return email.substring(0, 2).toUpperCase();
+  const getInitials = () => {
+    if (userProfile?.name) return userProfile.name.substring(0, 2).toUpperCase();
+    if (currentUser?.email) return currentUser.email.substring(0, 2).toUpperCase();
+    return "U";
   };
 
 
@@ -58,7 +59,7 @@ export default function AppHeader() {
           )}
           <div className="flex items-center gap-2">
             <LanguagesIcon className="h-5 w-5 text-muted-foreground" />
-            <Select value={locale} onValueChange={handleLanguageChange}>
+            <Select value={locale} onValueChange={handleLanguageChange} disabled={authLoading}>
               <SelectTrigger className="w-auto min-w-[100px] sm:min-w-[120px] h-9 text-sm" aria-label={t('selectAppLanguage')}>
                 <SelectValue placeholder={t('selectLanguage')} />
               </SelectTrigger>
@@ -69,7 +70,11 @@ export default function AppHeader() {
             </Select>
           </div>
 
-          {!loading && (
+          {authLoading ? (
+             <div className="h-9 w-9 flex items-center justify-center">
+                <Loader2 className="h-5 w-5 animate-spin" />
+             </div>
+          ) : (
             <>
               {!currentUser ? (
                 <>
@@ -91,24 +96,27 @@ export default function AppHeader() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                       <Avatar className="h-8 w-8">
-                        {/* Placeholder for user avatar image if available */}
-                        {/* <AvatarImage src={currentUser.photoURL || undefined} alt={currentUser.displayName || currentUser.email || "User"} /> */}
-                        <AvatarFallback>{getInitials(currentUser.email)}</AvatarFallback>
+                        {userProfile?.photoURL && <AvatarImage src={userProfile.photoURL} alt={userProfile.name || currentUser.email || "User"} />}
+                        <AvatarFallback>{getInitials()}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{t('myAccount')}</p>
+                        <p className="text-sm font-medium leading-none">{userProfile?.name || t('myAccount')}</p>
                         <p className="text-xs leading-none text-muted-foreground">
                           {currentUser.email}
                         </p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {/* Add other items like Profile, Settings here if needed */}
-                    {/* <DropdownMenuItem><UserCircle className="mr-2 h-4 w-4" />{t('profile')}</DropdownMenuItem> */}
+                     <DropdownMenuItem asChild className="cursor-pointer">
+                        <Link href="/profile/edit">
+                          <UserCog className="mr-2 h-4 w-4" />
+                          {t('editProfileTitle')}
+                        </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={logOut} className="cursor-pointer">
                       <LogOut className="mr-2 h-4 w-4" />
                       {t('logoutButton')}

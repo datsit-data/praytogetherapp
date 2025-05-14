@@ -12,6 +12,7 @@ import { Terminal } from "lucide-react";
 import type { SavedPrayerPlan } from "@/types/prayer-plan";
 import type { CreatePrayerPlanOutput } from "@/ai/flows/create-prayer-plan";
 import { useLanguage } from "@/contexts/language-context"; 
+import { useAuth } from "@/contexts/auth-context"; // Added
 
 const initialActionState: PrayerPlanState = {
   data: undefined,
@@ -22,14 +23,20 @@ const initialActionState: PrayerPlanState = {
 
 export default function PrayerPlanOrchestrator() {
   const { locale, t } = useLanguage(); 
-  
-  const boundFormAction = submitPrayerRequestAction.bind(null, locale);
+  const { userProfile } = useAuth(); // Added: Get userProfile for Bible version
+
+  // Bind currentLocale and preferredBibleVersion to the action
+  const boundFormAction = submitPrayerRequestAction.bind(
+    null, 
+    locale, 
+    userProfile?.preferredBibleVersion // Pass preferred Bible version
+  );
   
   const [internalActionState, formAction, isPending] = useActionState(boundFormAction, initialActionState);
   const { toast } = useToast();
   
   const [planToDisplay, setPlanToDisplay] = useState<CreatePrayerPlanOutput | SavedPrayerPlan | null>(null);
-  const [formKey, setFormKey] = useState(0); // Key for resetting the PrayerPlanForm component
+  const [formKey, setFormKey] = useState(0); 
   const [currentFormInitialState, setCurrentFormInitialState] = useState<PrayerPlanState>(initialActionState);
 
 
@@ -37,12 +44,10 @@ export default function PrayerPlanOrchestrator() {
     if (internalActionState?.data && !internalActionState.error) {
       toast({
         title: t('success'),
-        description: internalActionState.message || t('planSavedDescription', { reason: internalActionState.data.prayerReasonContext }), 
+        description: internalActionState.message || t('planGeneratedSuccessMessage', { reason: internalActionState.data.prayerReasonContext }), 
         variant: "default",
       });
       setPlanToDisplay(internalActionState.data);
-      // After successful plan generation, the *next* form (if "create another" is clicked) should be fresh.
-      // currentFormInitialState will be reset by handleCreateAnotherPlan.
     }
     if (internalActionState?.error && !internalActionState.data) { 
       toast({
@@ -50,25 +55,19 @@ export default function PrayerPlanOrchestrator() {
         description: internalActionState.error, 
         variant: "destructive",
       });
-      setPlanToDisplay(null); // Ensure form is shown on error
-      setCurrentFormInitialState(internalActionState); // Pass error and input to form
+      setPlanToDisplay(null); 
+      setCurrentFormInitialState(internalActionState); 
     }
   }, [internalActionState, toast, t]);
 
   const handlePlanSaved = (savedPlan: SavedPrayerPlan) => {
-    setPlanToDisplay(savedPlan); // Update display to show the saved version (e.g., with savedAt date)
-    // Toast for saving is handled by PrayerPlanDisplay's internal save logic if it calls useToast
-    // Or, if we want central control:
-    // toast({
-    //     title: t('planSavedTitle'),
-    //     description: t('planSavedDescription', { reason: savedPlan.prayerReasonContext }),
-    // });
+    setPlanToDisplay(savedPlan); 
   };
 
   const handleCreateAnotherPlan = () => {
-    setPlanToDisplay(null); // Hide the current plan, to show the form
-    setCurrentFormInitialState(initialActionState); // Reset form state for a new plan
-    setFormKey(prevKey => prevKey + 1); // Increment key to re-mount and reset PrayerPlanForm
+    setPlanToDisplay(null); 
+    setCurrentFormInitialState(initialActionState); 
+    setFormKey(prevKey => prevKey + 1); 
   };
 
 
@@ -78,7 +77,7 @@ export default function PrayerPlanOrchestrator() {
         <PrayerPlanDisplay 
           plan={planToDisplay} 
           onPlanSaved={handlePlanSaved}
-          isSavedPlanView={'id' in planToDisplay} // Check if it's a SavedPrayerPlan
+          isSavedPlanView={'id' in planToDisplay} 
         />
         <div className="mt-8 flex justify-center">
           <Button onClick={handleCreateAnotherPlan} size="lg">
@@ -108,4 +107,3 @@ export default function PrayerPlanOrchestrator() {
     </div>
   );
 }
-

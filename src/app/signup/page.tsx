@@ -10,52 +10,52 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, UserPlus, ChromeIcon } from 'lucide-react'; // Added ChromeIcon
+import { Loader2, UserPlus, ChromeIcon } from 'lucide-react'; 
 import { useLanguage } from '@/contexts/language-context';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { signUp, signInWithGoogle, currentUser, loading: authLoading, error, setError, getRedirectUrl } = useAuth();
+  const { signUp, signInWithGoogle, currentUser, loading: authLoading, authError, setAuthError, getRedirectUrl } = useAuth(); // authError, setAuthError
   const router = useRouter();
   const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
 
 
-  useEffect(() => {
-    if (currentUser) {
-      router.push(getRedirectUrl());
+ useEffect(() => {
+    // If user is already logged in and not in the process of profile creation, redirect them.
+    if (currentUser && !authLoading) {
+      const redirectUrl = getRedirectUrl();
+       // Avoid redirect loop if already on profile edit or if it's the intended redirect.
+      if (redirectUrl !== '/profile/edit' || router.pathname !== '/profile/edit') {
+         router.push(redirectUrl);
+      }
     }
-  }, [currentUser, router, getRedirectUrl]);
+  }, [currentUser, authLoading, router, getRedirectUrl]);
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError(t('passwordsDontMatchError'));
+      setAuthError(t('passwordsDontMatchError'));
       return;
     }
     setIsSubmitting(true);
-    setError(null); 
-    const user = await signUp(email, password);
-    if (user) {
-      router.push(getRedirectUrl()); 
-    }
-    setIsSubmitting(false);
+    setAuthError(null); 
+    await signUp(email, password); // AuthContext now handles redirection
+    setIsSubmitting(false); // Might not be reached
   };
 
   const handleGoogleSignIn = async () => {
     setIsGoogleSubmitting(true);
-    setError(null);
-    const user = await signInWithGoogle();
-    if (user) {
-      router.push(getRedirectUrl());
-    }
-    setIsGoogleSubmitting(false);
+    setAuthError(null);
+    await signInWithGoogle(); // AuthContext now handles redirection
+    setIsGoogleSubmitting(false); // Might not be reached
   };
   
-  if (authLoading && !error) {
+  if (authLoading && !authError) {
      return (
       <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -66,6 +66,7 @@ export default function SignupPage() {
      return (
       <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
+         <p className="ml-4 text-muted-foreground">{t('redirectingMessage') || 'Redirecting...'}</p>
       </div>
     );
   }
@@ -116,7 +117,7 @@ export default function SignupPage() {
                 className="text-base"
               />
             </div>
-            {error && <p className="text-sm text-destructive text-center py-2">{error}</p>}
+            {authError && <p className="text-sm text-destructive text-center py-2">{authError}</p>}
             <Button type="submit" className="w-full" disabled={isSubmitting || authLoading || isGoogleSubmitting}>
               {isSubmitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -149,7 +150,7 @@ export default function SignupPage() {
             ) : (
               <ChromeIcon className="mr-2 h-4 w-4" />
             )}
-            {t('signInWithGoogleButton')} 
+             {isGoogleSubmitting ? t('signingInWithGoogleButton') : t('signInWithGoogleButton')} {/* Added new key */}
           </Button>
 
         </CardContent>

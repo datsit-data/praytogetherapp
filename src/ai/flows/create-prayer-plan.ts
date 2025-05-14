@@ -1,7 +1,7 @@
 // src/ai/flows/create-prayer-plan.ts
 'use server';
 /**
- * @fileOverview Flow to create a personalized prayer plan based on user's reason for prayer and selected language.
+ * @fileOverview Flow to create a personalized prayer plan based on user's reason for prayer, selected language, and preferred Bible version.
  *
  * - createPrayerPlan - A function that generates a prayer plan.
  * - CreatePrayerPlanInput - The input type for the createPrayerPlan function.
@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import type { BibleVersionId } from '@/types/user-profile'; // Assuming BibleVersionId is defined here
 
 const CreatePrayerPlanInputSchema = z.object({
   prayerReason: z
@@ -18,13 +19,17 @@ const CreatePrayerPlanInputSchema = z.object({
   language: z
     .string()
     .describe('The language for the prayer plan (e.g., "English", "Spanish"). Default to English if not specified.'),
+  bibleVersion: z
+    .string() // Changed from BibleVersionId to string to accept any version name from profile
+    .describe('The preferred Bible version for scripture texts (e.g., "NIV", "NVI", "KJV"). The AI should try to use this version. If not possible or the version is not recognized for the language, use a standard modern translation (NIV/ESV for English, NVI for Spanish).')
+    .optional(),
 });
 export type CreatePrayerPlanInput = z.infer<typeof CreatePrayerPlanInputSchema>;
 
 const DailyPrayerSchema = z.object({
   day: z.string().describe('Day of the prayer plan (e.g., "Day 1", "Monday", "Lunes", "Día 1") in the specified language.'),
   bibleVerse: z.string().describe('A relevant Bible verse reference (e.g., John 3:16).'),
-  bibleVerseText: z.string().describe('The full text of the Bible verse, accurately quoted. If the language is Spanish, use the "Nueva Versión Internacional" (NVI). If English, use a modern, clear translation (e.g., NIV, ESV). Must be in the specified language.'),
+  bibleVerseText: z.string().describe('The full text of the Bible verse, accurately quoted. Use the specified {{{bibleVersion}}} if possible for the {{{language}}}. If not specified or recognized, use "Nueva Versión Internacional" (NVI) for Spanish, or a modern, clear translation (e.g., NIV, ESV) for English. Must be in the specified language.'),
   reflection: z
     .string()
     .describe('A detailed reflection (at least 3-4 sentences) in the specified language on how the Bible verse applies to the user\'s prayer reason, guiding them to analyze its meaning in context.'),
@@ -36,6 +41,7 @@ const DailyPrayerSchema = z.object({
 const CreatePrayerPlanOutputSchema = z.object({
   prayerReasonContext: z.string().describe("The original prayer reason this plan was generated for."),
   languageContext: z.string().describe("The language this plan was generated in."),
+  bibleVersionContext: z.string().optional().describe("The Bible version requested for this plan, if provided."),
   prayerPlan: z.array(DailyPrayerSchema).describe('The generated prayer plan in the specified language.'),
   recommendedDays: z
     .string()
@@ -62,7 +68,11 @@ The plan should be for a suggested duration and recommend specific days for pray
 Each day in the plan should include:
 1.  The day identifier (e.g., "Day 1", "Monday", "Lunes", "Día 1") in {{{language}}}.
 2.  A relevant Bible verse reference.
-3.  The full text of that Bible verse, accurately quoted in {{{language}}}. If {{{language}}} is Spanish (e.g., 'es', 'Spanish'), provide the text from the "Nueva Versión Internacional" (NVI). If {{{language}}} is English, use a modern and clear translation like the New International Version (NIV) or English Standard Version (ESV).
+3.  The full text of that Bible verse, accurately quoted in {{{language}}}. 
+    Attempt to use the Bible version '{{{bibleVersion}}}' if it is specified and appropriate for the {{{language}}}.
+    If '{{{bibleVersion}}}' is not specified, not available, or not suitable for the {{{language}}}, then:
+    - If {{{language}}} is Spanish (e.g., 'es', 'Spanish'), provide the text from the "Nueva Versión Internacional" (NVI).
+    - If {{{language}}} is English, use a modern and clear translation like the New International Version (NIV) or English Standard Version (ESV).
 4.  A detailed reflection (at least 3-4 sentences) in {{{language}}} on how the Bible verse applies to the user's prayer reason ({{{prayerReason}}}), guiding them to analyze its meaning in context.
 5.  A longer, more comprehensive, and personalized prayer (at least 4-5 sentences) in {{{language}}} for the day, inspired by the verse, reflection, and prayer reason.
 6.  A practical and encouraging tip (1-2 sentences) in {{{language}}} for the day, related to the prayer reason and scripture, under the key \`tipOfTheDay\`. This tip should help the user apply the day's theme in their life.
@@ -70,6 +80,7 @@ Each day in the plan should include:
 
 Reason for prayer: {{{prayerReason}}}
 Desired language: {{{language}}}
+Preferred Bible Version: {{{bibleVersion}}} (Use this if possible, otherwise default as instructed above)
 
 Output the entire plan in {{{language}}}.
 
@@ -77,11 +88,12 @@ Format the prayer plan as a JSON object with the following structure, ensuring a
 {
   "prayerReasonContext": "{{{prayerReason}}}",
   "languageContext": "{{{language}}}",
+  "bibleVersionContext": "{{{bibleVersion}}}",
   "prayerPlan": [
     {
       "day": "Localized Day (e.g., Day 1 / Lunes)",
       "bibleVerse": "Bible Verse Reference (e.g., John 3:16)",
-      "bibleVerseText": "Full text of the Bible verse in {{{language}}}. For Spanish, this must be from the NVI. For English, use a modern translation (e.g., NIV, ESV).",
+      "bibleVerseText": "Full text of the Bible verse in {{{language}}}. Adhere to Bible version instructions.",
       "reflection": "Detailed reflection in {{{language}}}",
       "prayer": "Longer, personalized prayer in {{{language}}}",
       "tipOfTheDay": "Localized practical tip for the day (1-2 sentences) in {{{language}}}",
@@ -101,7 +113,7 @@ const createPrayerPlanFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    // Ensure bibleVersionContext is present in the output, even if input.bibleVersion was undefined
+    return { ...output!, bibleVersionContext: input.bibleVersion ?? undefined };
   }
 );
-

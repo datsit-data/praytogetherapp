@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import AppHeader from '@/components/layout/app-header';
 import AppFooter from '@/components/layout/app-footer';
 import { LanguageProvider } from '@/contexts/language-context';
-import { AuthProvider } from '@/contexts/auth-context'; // Import AuthProvider
+import { AuthProvider } from '@/contexts/auth-context'; 
 
 const lato = Lato({
   subsets: ['latin'],
@@ -27,8 +27,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${lato.variable} font-sans antialiased flex flex-col min-h-screen`}>
-        <LanguageProvider>
-          <AuthProvider> {/* Wrap with AuthProvider */}
+        <LanguageProvider> {/* LanguageProvider now wraps AuthProvider */}
+          <AuthProvider>
             <AppHeader />
             <main className="flex-grow container mx-auto px-4 py-8">
               {children}
