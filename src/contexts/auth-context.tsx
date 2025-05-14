@@ -11,10 +11,12 @@ import {
   type AuthError,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  GoogleAuthProvider, // Added
+  signInWithPopup     // Added
 } from 'firebase/auth';
 import { app } from '@/lib/firebase/client'; // Use the initialized app
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useLanguage } from './language-context';
 
 interface AuthContextType {
@@ -24,6 +26,7 @@ interface AuthContextType {
   setError: Dispatch<SetStateAction<string | null>>;
   signUp: (email: string, pass: string) => Promise<User | null>;
   logIn: (email: string, pass: string) => Promise<User | null>;
+  signInWithGoogle: () => Promise<User | null>; // Added
   logOut: () => Promise<void>;
 }
 
@@ -34,7 +37,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const auth = getAuth(app); // Get auth instance from our initialized app
+  const searchParams = useSearchParams();
+  const auth = getAuth(app); 
   const { t } = useLanguage();
 
 
@@ -45,6 +49,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     return () => unsubscribe();
   }, [auth]);
+
+  const getRedirectUrl = () => {
+    return searchParams.get('redirect') || '/';
+  }
 
   const signUp = async (email: string, pass: string): Promise<User | null> => {
     setLoading(true);
@@ -80,13 +88,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const signInWithGoogle = async (): Promise<User | null> => {
+    setLoading(true);
+    setError(null);
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      setCurrentUser(result.user);
+      setLoading(false);
+      return result.user;
+    } catch (err) {
+      const authError = err as AuthError;
+      console.error("Google Sign-in error:", authError);
+      if (authError.code === 'auth/popup-closed-by-user') {
+        setError(t('googlePopupClosedError'));
+      } else {
+        setError(authError.message || t('googleSignInFailedError'));
+      }
+      setLoading(false);
+      return null;
+    }
+  };
+
   const logOut = async () => {
     setLoading(true);
     setError(null);
     try {
       await signOut(auth);
       setCurrentUser(null);
-      router.push('/login'); // Redirect to login after logout
+      router.push('/login'); 
     } catch (err) {
        const authError = err as AuthError;
        console.error("Logout error:", authError);
@@ -104,10 +134,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError,
     signUp,
     logIn,
+    signInWithGoogle, // Added
     logOut,
+    getRedirectUrl, // Added for redirect handling
   };
 
-  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

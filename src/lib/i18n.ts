@@ -71,7 +71,7 @@ export const translations = {
     loginLink: "Log in",
     logoutButton: "Log Out",
     myAccount: "My Account",
-    profile: "Profile", // If you add a profile page
+    profile: "Profile", 
     signupFailedError: "Signup failed. Please try again.",
     loginFailedError: "Login failed. Please check your credentials.",
     logoutFailedError: "Logout failed. Please try again.",
@@ -80,6 +80,10 @@ export const translations = {
     accessDeniedTitle: "Access Denied",
     mustBeLoggedInToViewPlans: "You must be logged in to view your saved plans.",
     createFirstPlanButton: "Create Your First Plan",
+    orContinueWith: "Or continue with",
+    signInWithGoogleButton: "Sign in with Google",
+    googleSignInFailedError: "Google Sign-In failed. Please try again.",
+    googlePopupClosedError: "Google Sign-In popup closed by user. Please try again if it was accidental.",
   },
   es: {
     appName: "OremosJuntos",
@@ -149,7 +153,7 @@ export const translations = {
     loginLink: "Inicia sesión",
     logoutButton: "Cerrar Sesión",
     myAccount: "Mi Cuenta",
-    profile: "Perfil", // Si añades una página de perfil
+    profile: "Perfil", 
     signupFailedError: "Error al registrarse. Por favor, inténtalo de nuevo.",
     loginFailedError: "Error al iniciar sesión. Verifica tus credenciales.",
     logoutFailedError: "Error al cerrar sesión. Por favor, inténtalo de nuevo.",
@@ -158,6 +162,10 @@ export const translations = {
     accessDeniedTitle: "Acceso Denegado",
     mustBeLoggedInToViewPlans: "Debes iniciar sesión para ver tus planes guardados.",
     createFirstPlanButton: "Crea Tu Primer Plan",
+    orContinueWith: "O continuar con",
+    signInWithGoogleButton: "Iniciar sesión con Google",
+    googleSignInFailedError: "Error al iniciar sesión con Google. Por favor, inténtalo de nuevo.",
+    googlePopupClosedError: "La ventana de inicio de sesión de Google fue cerrada por el usuario. Por favor, inténtalo de nuevo si fue accidental.",
   },
 };
 
