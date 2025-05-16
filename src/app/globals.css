@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,94 +9,99 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 98%; /* Soft White #FAFAFA */
-    --foreground: 210 10% 23%; /* Dark Gray for text */
+    /* Material Design Inspired Light Theme */
+    --background: 0 0% 100%; /* White */
+    --foreground: 0 0% 13%; /* Near Black for text (Material Dark Text) */
 
-    --muted: 0 0% 94.1%; /* Light Grey #F0F0F0 for subtle backgrounds */
-    --muted-foreground: 210 10% 45%; /* Slightly lighter gray for muted text */
+    --muted: 0 0% 96%; /* Grey 100 (#F5F5F5) for subtle backgrounds */
+    --muted-foreground: 0 0% 40%; /* Grey 700 (#616161) for muted text */
 
     --popover: 0 0% 100%; /* White */
-    --popover-foreground: 210 10% 23%;
+    --popover-foreground: 0 0% 13%;
 
-    --card: 0 0% 100%; /* White cards */
-    --card-foreground: 210 10% 23%;
+    --card: 0 0% 100%; /* White cards (Material Surface) */
+    --card-foreground: 0 0% 13%;
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
+    --border: 0 0% 87%; /* Grey 300 (#E0E0E0) for borders */
+    --input: 0 0% 87%; /* Input border matches general border */
 
-    --primary: 207 90% 54%; /* Calm, distinct blue for actions */
-    --primary-foreground: 0 0% 100%; /* White text on primary blue */
+    --primary: 231 48% 48%; /* Indigo 500 (#3F51B5) - Material Primary */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
 
-    --secondary: 207 100% 85%; /* Calm Blue (#B0E2FF) as secondary / softer accent */
-    --secondary-foreground: 210 10% 23%; /* Dark text on this light blue */
+    --secondary: 208 13% 65%; /* Blue Grey 200 (#B0BEC5) - Material Secondary */
+    --secondary-foreground: 0 0% 13%; /* Dark text on light secondary */
 
-    --accent: 51 100% 50%; /* Gold #FFD700 */
-    --accent-foreground: 210 10% 23%; /* Dark text on gold for contrast */
+    --accent: 340 82% 61%; /* Pink 500 (#EC407A) - Material Accent */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%; /* Red 600 (#E53935) */
+    --destructive-foreground: 0 0% 100%;
 
-    --ring: 207 90% 54%; /* Ring color matches primary */
-    --radius: 0.5rem;
+    --ring: 231 48% 48%; /* Ring color matches primary */
+    --radius: 0.25rem; /* 4px, common Material Design radius */
 
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --chart-1: 231 48% 48%; /* Primary */
+    --chart-2: 340 82% 61%; /* Accent */
+    --chart-3: 208 13% 55%; /* Darker Secondary */
+    --chart-4: 45 100% 50%; /* Amber 500 for charts */
+    --chart-5: 122 39% 49%; /* Green 500 for charts */
+    
+    --sidebar-background: 0 0% 98%; /* Soft White, can be adjusted to match main BG or slightly off */
+    --sidebar-foreground: 0 0% 13%;
+    --sidebar-primary: 231 48% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 94%; /* Lighter accent for sidebar */
+    --sidebar-accent-foreground: 0 0% 13%;
+    --sidebar-border: 0 0% 87%;
+    --sidebar-ring: 231 48% 48%;
   }
 
   .dark {
-    --background: 210 10% 10%; /* Darker background */
-    --foreground: 0 0% 98%; /* Light foreground */
+    /* Material Design Inspired Dark Theme */
+    --background: 0 0% 7%; /* Dark Grey 900 (#121212) */
+    --foreground: 0 0% 98%; /* White text */
 
-    --muted: 210 10% 15%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 0 0% 15%; /* Slightly lighter grey for muted backgrounds */
+    --muted-foreground: 0 0% 60%; /* Lighter muted text */
 
-    --popover: 210 10% 5%;
+    --popover: 0 0% 10%; /* Dark Grey 800 (#1E1E1E) for popovers */
     --popover-foreground: 0 0% 98%;
 
-    --card: 210 10% 5%;
+    --card: 0 0% 10%; /* Dark Grey 800 (#1E1E1E) for cards (Material Surface on Dark) */
     --card-foreground: 0 0% 98%;
 
-    --border: 210 10% 20%;
-    --input: 210 10% 20%;
+    --border: 0 0% 20%; /* Darker border */
+    --input: 0 0% 20%; /* Input border matches general border */
 
-    --primary: 207 90% 60%; /* Brighter blue for dark mode */
-    --primary-foreground: 210 10% 5%; /* Dark text on primary */
+    --primary: 207 90% 61%; /* Blue 200 (#90CAF9) - Lighter primary for dark mode */
+    --primary-foreground: 0 0% 13%; /* Dark text on light primary */
 
-    --secondary: 207 100% 80%; /* Lighter calm blue */
-    --secondary-foreground: 210 10% 5%;
+    --secondary: 208 10% 50%; /* Blue Grey 400 (#78909C) */
+    --secondary-foreground: 0 0% 98%; /* Light text on this secondary */
 
-    --accent: 51 100% 55%; /* Slightly brighter gold */
-    --accent-foreground: 210 10% 5%;
+    --accent: 340 100% 75%; /* Pink 200 (#F48FB1) - Lighter accent for dark mode */
+    --accent-foreground: 0 0% 13%; /* Dark text on light accent */
 
-    --destructive: 0 72.2% 50.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 65%; /* Red 300 (#E57373) */
+    --destructive-foreground: 0 0% 13%; /* Dark text on light destructive */
 
-    --ring: 207 90% 60%;
+    --ring: 207 90% 61%; /* Ring color matches primary */
+    /* --radius remains 0.25rem */
     
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --chart-1: 207 90% 61%; /* Primary (Dark) */
+    --chart-2: 340 100% 75%; /* Accent (Dark) */
+    --chart-3: 208 10% 60%; /* Lighter Secondary (Dark) */
+    --chart-4: 45 100% 65%; /* Lighter Amber for charts */
+    --chart-5: 122 39% 65%; /* Lighter Green for charts */
+
+    --sidebar-background: 0 0% 10%; /* Matches card background */
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 207 90% 61%;
+    --sidebar-primary-foreground: 0 0% 13%;
+    --sidebar-accent: 0 0% 18%; /* Slightly lighter than sidebar bg */
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 207 90% 61%;
   }
 }
 
